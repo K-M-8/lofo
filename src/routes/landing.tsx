@@ -17,25 +17,60 @@ function Landing() {
   });
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    let isMounted = true;
+
+    // 1. Listen live to auth changes so redirects happen instantly upon token detection
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!isMounted) return;
+
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+
+      if (session?.user) {
+        navigate({ to: "/" });
+      }
     });
 
-    const loadStats = async () => {
-      const [{ count: orgs }, { count: items }, { count: recovered }] =
-        await Promise.all([
-          supabase.from("organizations").select("*", { count: "exact", head: true }).eq("status", "approved"),
-          supabase.from("items").select("*", { count: "exact", head: true }),
-          supabase.from("items").select("*", { count: "exact", head: true }).eq("status", "recovered"),
-        ]);
-      setStats({
-        orgs: orgs ?? 0,
-        items: items ?? 0,
-        recovered: recovered ?? 0,
-      });
+    // 2. Fetch stats safely without blocking the authentication flow logic
+    const fetchStats = async () => {
+      try {
+        const [{ count: orgs }, { count: items }, { count: recovered }] =
+          await Promise.all([
+            supabase
+              .from("organizations")
+              .select("*", { count: "exact", head: true })
+              .eq("status", "approved"),
+
+            supabase
+              .from("items")
+              .select("*", { count: "exact", head: true }),
+
+            supabase
+              .from("items")
+              .select("*", { count: "exact", head: true })
+              .eq("status", "recovered"),
+          ]);
+
+        if (isMounted) {
+          setStats({
+            orgs: orgs ?? 0,
+            items: items ?? 0,
+            recovered: recovered ?? 0,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching landing stats:", error);
+      }
     };
-    loadStats();
-  }, []);
+
+    fetchStats();
+
+    // 3. Clean up on unmount to prevent state leaks or route conflicts
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
 
   const recoveryRate = stats.items > 0
     ? Math.round((stats.recovered / stats.items) * 100)
