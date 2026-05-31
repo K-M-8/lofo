@@ -19,21 +19,23 @@ function Landing() {
   useEffect(() => {
     let isMounted = true;
 
-    // 1. Listen live to auth changes so redirects happen instantly upon token detection
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!isMounted) return;
-
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-
-      if (session?.user) {
-        navigate({ to: "/" });
-      }
-    });
-
-    // 2. Fetch stats safely without blocking the authentication flow logic
-    const fetchStats = async () => {
+    const initializeLanding = async () => {
       try {
+        // 1. Get the current session quietly ONCE without a live loop listener
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!isMounted) return;
+
+        if (session?.user) {
+          setUser(session.user);
+          // ONLY navigate if we are explicitly on the landing route to prevent history loops
+          if (window.location.pathname === "/landing") {
+            navigate({ to: "/" });
+            return;
+          }
+        }
+
+        // 2. Fetch stats independently
         const [{ count: orgs }, { count: items }, { count: recovered }] =
           await Promise.all([
             supabase
@@ -59,16 +61,14 @@ function Landing() {
           });
         }
       } catch (error) {
-        console.error("Error fetching landing stats:", error);
+        console.error("Error during landing initialization:", error);
       }
     };
 
-    fetchStats();
+    initializeLanding();
 
-    // 3. Clean up on unmount to prevent state leaks or route conflicts
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
     };
   }, [navigate]);
 
