@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useItems } from "@/lib/items-store";
 import { ItemCard } from "@/components/site/ItemCard";
+import { Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: Home,
+  component: () => <Navigate to="/landing" />,
 });
 
 function Home() {
