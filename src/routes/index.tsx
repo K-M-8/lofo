@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useItems } from "@/lib/items-store";
 import { ItemCard } from "@/components/site/ItemCard";
-import { Navigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,8 +10,7 @@ export const Route = createFileRoute("/")({
       { title: "LoFo — Lost & Found Platform" },
       {
         name: "description",
-        content:
-          "A universal lost & found platform for colleges, offices, and societies.",
+        content: "A universal lost & found platform for colleges, offices, and societies.",
       },
       { property: "og:title", content: "LoFo — Lost & Found Platform" },
       {
@@ -21,7 +19,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: () => <Navigate to="/landing" />,
+  component: Home,
 });
 
 function Home() {
@@ -76,12 +74,9 @@ function Home() {
 
   return (
     <>
-      {/* Hero */}
       <header className="px-6 py-16 md:py-24 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-end">
           <div className="animate-reveal">
-
-            {/* Org badge */}
             {!profileLoading && (
               <div className="mb-6">
                 {orgName ? (
@@ -102,7 +97,7 @@ function Home() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => navigate({ to: "/auth" })}
+                    onClick={() => navigate({ to: "/landing" })}
                     className="inline-flex items-center gap-2 border border-primary/50 px-3 py-1.5 text-primary hover:bg-primary/10 transition-colors"
                   >
                     <span className="font-mono text-[10px] uppercase tracking-widest">
@@ -155,7 +150,6 @@ function Home() {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="animate-reveal [animation-delay:150ms] border-l border-border pl-8">
             <div className="space-y-6">
               <Stat label="Total Recovered" value={String(recovered || 0)} />
@@ -174,7 +168,6 @@ function Home() {
         </div>
       </header>
 
-      {/* Latest listings */}
       <section className="px-6 py-12 border-t border-border">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-8">

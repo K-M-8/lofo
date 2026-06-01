@@ -27,13 +27,8 @@ function Landing() {
         if (!isMounted) return;
 
         if (session?.user) {
-          setUser(session.user);
-          // ONLY navigate if we are explicitly on the landing route to prevent history loops
-          if (window.location.pathname === "/landing") {
-            navigate({ to: "/" });
-            return;
-          }
-        }
+           setUser(session.user);
+         }
 
         // 2. Fetch stats independently
         const [{ count: orgs }, { count: items }, { count: recovered }] =
