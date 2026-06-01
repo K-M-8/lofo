@@ -2,7 +2,7 @@
 
 A full stack web application that digitizes lost & found management for any organization — colleges, offices, housing societies, and airports.
 
-**Live Demo:** [your-cloudflare-url.pages.dev](https://lofo.mahajankhwaish650.workers.dev/)
+**Live Demo:** (https://lofo.mahajankhwaish650.workers.dev/)
 
 ---
 
