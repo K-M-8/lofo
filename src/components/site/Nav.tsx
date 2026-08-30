@@ -3,17 +3,25 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const links = [
-  { to: "/", label: "Home" },
-  { to: "/browse", label: "Browse All" },
-  { to: "/report", label: "Report Item" },
-];
 
 export function Nav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [orgName, setOrgName] = useState<string | null>(null);
+
+  const links = user
+? [
+  { to: "/dashboard", label: "Home" },
+  { to: "/browse", label: "Browse All" },
+  { to: "/report", label: "Report Item" },
+]
+: [
+  { to: "/", label: "Home" }, //home should go to marketing when logged out
+  { to: "/browse", label: "Browse All" }
+];
+
+
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -46,7 +54,11 @@ export function Nav() {
   }, []);
 
  const handleLogout = async () => {
+  try {
   await supabase.auth.signOut();
+  } catch(error) {
+    console.error("Sign out error (continuing anyway):",error);
+  }
   toast.success("Logged out successfully!");
   window.location.href = "/";
 };
@@ -56,7 +68,7 @@ export function Nav() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link to={user ? "/dashboard" : "/"} className="flex items-center gap-2 group">
           <div className="size-8 bg-foreground flex items-center justify-center">
             <div className="size-3 border-2 border-background rotate-45 group-hover:rotate-90 transition-transform duration-500" />
           </div>

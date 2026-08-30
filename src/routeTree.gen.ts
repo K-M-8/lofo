@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as RegisterOrgRouteImport } from './routes/register-org'
-import { Route as LandingRouteImport } from './routes/landing'
 import { Route as JoinOrgRouteImport } from './routes/join-org'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -27,14 +27,14 @@ const RegisterOrgRoute = RegisterOrgRouteImport.update({
   path: '/register-org',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LandingRoute = LandingRouteImport.update({
-  id: '/landing',
-  path: '/landing',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const JoinOrgRoute = JoinOrgRouteImport.update({
   id: '/join-org',
   path: '/join-org',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrowseRoute = BrowseRouteImport.update({
@@ -57,8 +57,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
+  '/dashboard': typeof DashboardRoute
   '/join-org': typeof JoinOrgRoute
-  '/landing': typeof LandingRoute
   '/register-org': typeof RegisterOrgRoute
   '/report': typeof ReportRoute
 }
@@ -66,8 +66,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
+  '/dashboard': typeof DashboardRoute
   '/join-org': typeof JoinOrgRoute
-  '/landing': typeof LandingRoute
   '/register-org': typeof RegisterOrgRoute
   '/report': typeof ReportRoute
 }
@@ -76,8 +76,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/browse': typeof BrowseRoute
+  '/dashboard': typeof DashboardRoute
   '/join-org': typeof JoinOrgRoute
-  '/landing': typeof LandingRoute
   '/register-org': typeof RegisterOrgRoute
   '/report': typeof ReportRoute
 }
@@ -87,8 +87,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/browse'
+    | '/dashboard'
     | '/join-org'
-    | '/landing'
     | '/register-org'
     | '/report'
   fileRoutesByTo: FileRoutesByTo
@@ -96,8 +96,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/browse'
+    | '/dashboard'
     | '/join-org'
-    | '/landing'
     | '/register-org'
     | '/report'
   id:
@@ -105,8 +105,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/browse'
+    | '/dashboard'
     | '/join-org'
-    | '/landing'
     | '/register-org'
     | '/report'
   fileRoutesById: FileRoutesById
@@ -115,8 +115,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   BrowseRoute: typeof BrowseRoute
+  DashboardRoute: typeof DashboardRoute
   JoinOrgRoute: typeof JoinOrgRoute
-  LandingRoute: typeof LandingRoute
   RegisterOrgRoute: typeof RegisterOrgRoute
   ReportRoute: typeof ReportRoute
 }
@@ -137,18 +137,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterOrgRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/landing': {
-      id: '/landing'
-      path: '/landing'
-      fullPath: '/landing'
-      preLoaderRoute: typeof LandingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/join-org': {
       id: '/join-org'
       path: '/join-org'
       fullPath: '/join-org'
       preLoaderRoute: typeof JoinOrgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/browse': {
@@ -179,8 +179,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   BrowseRoute: BrowseRoute,
+  DashboardRoute: DashboardRoute,
   JoinOrgRoute: JoinOrgRoute,
-  LandingRoute: LandingRoute,
   RegisterOrgRoute: RegisterOrgRoute,
   ReportRoute: ReportRoute,
 }

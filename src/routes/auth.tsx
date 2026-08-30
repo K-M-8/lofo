@@ -26,7 +26,7 @@ function Auth() {
         });
         if (error) throw error;
         toast.success("Welcome back!");
-        navigate({ to: "/" });
+        navigate({ to: "/dashboard" });
       } else {
         const { error } = await supabase.auth.signUp({
           email: email.trim(),
